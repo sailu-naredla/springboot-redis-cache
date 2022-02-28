@@ -1,6 +1,7 @@
 package com.redis.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -65,8 +66,20 @@ public class ProductServiceImpl implements ProductService {
 	public Product getProduct(String productId) {
 		
 		log.info("Entering getProduct");
-		Optional<ProductEntity> productEntity = productRepository.findById(productId);
 		Product product = new Product();
+		//Option-1
+		  ProductEntity cacheEntity = new ProductEntity(); 
+		  Map<Object, Object> productEntityMap = productCacheService.readAllHash(cacheEntity.getObjectKey()); 
+		  if(null != productEntityMap.get(productId)) {
+			  ProductEntity responseData =
+			  productCacheService .get((ProductEntity) productEntityMap.get(productId));
+			  product.setId(responseData.getId());
+			  product.setName(responseData.getName());
+			  product.setPrice(responseData.getPrice());
+			  product.setQty(responseData.getQty()); 
+		  }
+		//Option-2
+		Optional<ProductEntity> productEntity = productRepository.findById(productId);
 		if(productEntity.isPresent()) {
 			product.setId(productEntity.get().getId());
 			product.setName(productEntity.get().getName());

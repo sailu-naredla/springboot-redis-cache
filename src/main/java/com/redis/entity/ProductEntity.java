@@ -1,6 +1,8 @@
 package com.redis.entity;
 
 import java.io.Serializable;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import com.googlecode.jmapper.annotations.JMap;
 import com.redis.cache.Cacheable;
@@ -16,6 +18,7 @@ public class ProductEntity implements Serializable, Cacheable {
 	private static final String OBJECT_KEY = "PRODUCT";
 	
 	@JMap
+	@Id
 	String id;
 	
 	@JMap
